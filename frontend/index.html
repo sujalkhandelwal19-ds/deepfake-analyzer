@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SECURE TERMINAL // Deepfake Analyzer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="scanlines"></div>
+
+    <main class="cyber-terminal">
+        <header class="cyber-header">
+            <div class="sys-info">
+                <span>SYS.STATUS: <span class="text-neon-green">ONLINE</span></span>
+                <span>UPLINK: SECURE</span>
+            </div>
+            <h1>[ THREAT_DETECTION_CORE_v2.0 ]</h1>
+            <p>AWAITING SUSPECT MEDIA PACKET FOR ENSEMBLE AI ANALYSIS...</p>
+        </header>
+
+        <div class="terminal-body">
+            <!-- Left Side: Interactive Console -->
+            <div class="console-panel">
+                <div class="panel-header">>>> UPLOAD_TARGET_DATA</div>
+                
+                <div class="drop-zone" id="drop-zone">
+                    <div class="drop-zone-content">
+                        <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="1.5" d="M4 16v1h16v-1M12 4v12M8 8l4-4 4 4"></path></svg>
+                        <span class="drop-zone-text">INITIALIZE SECURE UPLOAD<br><span class="highlight">[ BROWSE DIRECTORY ]</span></span>
+                    </div>
+                    <input type="file" id="file-input" accept="image/*" hidden>
+                </div>
+
+                <div id="preview-container" class="preview-container hidden">
+                    <div class="scanner-bar" id="scanner-bar"></div>
+                    <img id="image-preview" src="" alt="Target Subject">
+                    <button id="remove-btn" class="icon-btn">ABORT</button>
+                    <div class="corner-tl"></div>
+                    <div class="corner-tr"></div>
+                    <div class="corner-bl"></div>
+                    <div class="corner-br"></div>
+                </div>
+
+                <button id="analyze-btn" class="cyber-btn" disabled>
+                    <span class="btn-text">EXECUTE NEURAL SCAN</span>
+                    <span class="glitch-text" aria-hidden="true">EXECUTE NEURAL SCAN</span>
+                </button>
+            </div>
+
+            <!-- Right Side: Analytics & Logs -->
+            <div class="analytics-panel">
+                <div class="panel-header">>>> SYSTEM_LOGS & RESULTS</div>
+                
+                <div class="log-window" id="log-window">
+                    <p class="log-line">> SYSTEM IDLE. WAITING FOR INPUT...</p>
+                </div>
+
+                <section id="result-section" class="result-section hidden">
+                    <div class="result-card" id="result-card">
+                        <h3>THREAT ASSESSMENT</h3>
+                        <h2 id="verdict" class="glitch-verdict" data-text="UNKNOWN">UNKNOWN</h2>
+                        
+                        <div class="confidence-container">
+                            <div class="confidence-header">
+                                <span>AI_CONFIDENCE_MATRIX</span>
+                                <span id="confidence-text">0.00%</span>
+                            </div>
+                            <div class="progress-track">
+                                <div id="progress-fill" class="progress-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

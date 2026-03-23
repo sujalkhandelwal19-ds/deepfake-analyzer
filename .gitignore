@@ -1,0 +1,28 @@
+# Virtual environments
+venv/
+env/
+.env
+
+# Python caching
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore large raw datasets (but keep test data for demonstration)
+data/train/
+
+# Model checkpoints (optional: keep only final model, or use git lfs for it)
+*best_model.h5
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Log and temp files from our conversation
+*.zip
+err.txt
+curl_out.txt
+*.log
+
+# Gemini
+.gemini/
