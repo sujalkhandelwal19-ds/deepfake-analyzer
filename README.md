@@ -26,6 +26,32 @@ The Deepfake Detection system is a robust, full-stack application designed to cl
 
 ## 3. System Architecture & Component Mapping
 
+```mermaid
+graph TD
+    subgraph Client ["Frontend UI"]
+        A["HTML5/CSS3 Interface"] -->|"Drag & Drop"| B["Vanilla JS Engine"]
+        B -.->|"FormData Payload"| C{"HTTPS POST /predict"}
+    end
+
+    subgraph Backend ["FastAPI Server"]
+        C -->|"Receives File"| D["UploadFile Buffer"]
+        D -->|"Bytes"| E["Pillow/OpenCV Preprocessor"]
+        E -->|"Tensor (1, 224, 224, 3)"| F(("Keras Core Model"))
+    end
+
+    subgraph AI ["Defense Deepfake AI"]
+        F --> G["EfficientNetB3"]
+        F --> H["Xception"]
+        G --> I{"Concatenate"}
+        H --> I
+        I --> J["Attention Mechanism"]
+        J --> K["Dense Layers + Dropout"]
+        K --> L["Sigmoid Output > 0.5"]
+    end
+
+    L -->|"JSON Response"| B
+```
+
 ### A. The Neural Architecture (`deepfake_detector_final.h5`)
 The underlying AI model is a highly complex ensemble classifier:
 1. **Base Extractors**: The system feeds the normalized image matrix simultaneously into two independent transfer-learning models:
@@ -48,6 +74,27 @@ The frontend operates as a single-page application (SPA). Key features include:
 ---
 
 ## 4. End-to-End Data Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Browser
+    participant FastAPI
+    participant CV2_Pillow
+    participant KerasModel
+
+    User->>Browser: Drops image & clicks "Analyze"
+    Browser->>FastAPI: POST /api/predict (multipart/form-data)
+    FastAPI->>CV2_Pillow: Pass byte stream
+    CV2_Pillow->>CV2_Pillow: Convert to RGB & resize 224x224
+    CV2_Pillow->>CV2_Pillow: Normalize pixels (/255.0) & expand dims
+    CV2_Pillow->>KerasModel: model.predict(tensor)
+    KerasModel-->>KerasModel: Pass through EfficientNet & Xception
+    KerasModel-->>KerasModel: Apply Spatial Attention
+    KerasModel->>FastAPI: Return Sigmoid Float (0.0 - 1.0)
+    FastAPI->>Browser: JSON {prediction: "REAL", confidence: 0.98}
+    Browser->>User: Animate Cyber HUD & Display Results
+```
 
 The chronological lifecycle of a user interacting with the platform:
 
