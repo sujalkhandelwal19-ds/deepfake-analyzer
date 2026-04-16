@@ -23,9 +23,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Configuration
-BASE_DIR = r"c:\STUDY MATERIALS\MINI PROJECT"
-MODEL_PATH = os.path.join(BASE_DIR, "results_20260311_210339", "deepfake_detector_final.h5")
+# Configuration — use paths relative to this file so it works on any OS
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # project root
+MODEL_PATH = os.environ.get(
+    "MODEL_PATH",
+    os.path.join(BASE_DIR, "results_20260311_210339", "deepfake_detector_final.h5")
+)
 IMG_SIZE = (224, 224)
 
 # Global model variable

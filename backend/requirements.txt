@@ -1,4 +1,7 @@
 fastapi
-uvicorn
+uvicorn[standard]
 python-multipart
 Pillow
+tensorflow-cpu
+numpy
+opencv-python-headless
