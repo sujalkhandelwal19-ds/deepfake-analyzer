@@ -42,7 +42,11 @@ class CustomDense(keras.layers.Dense):
 
 class CustomInputLayer(keras.layers.InputLayer):
     def __init__(self, **kwargs):
+        # Keras 3 uses 'optional' — not recognized by Keras 2
         kwargs.pop("optional", None)
+        # Keras 3 uses 'batch_shape', Keras 2 uses 'batch_input_shape'
+        if "batch_shape" in kwargs:
+            kwargs["batch_input_shape"] = kwargs.pop("batch_shape")
         super().__init__(**kwargs)
 
 @app.on_event("startup")
