@@ -40,15 +40,6 @@ class CustomDense(keras.layers.Dense):
         kwargs.pop("quantization_config", None)
         super().__init__(**kwargs)
 
-class CustomInputLayer(keras.layers.InputLayer):
-    def __init__(self, **kwargs):
-        # Keras 3 uses 'optional' — not recognized by Keras 2
-        kwargs.pop("optional", None)
-        # Keras 3 uses 'batch_shape', Keras 2 uses 'batch_input_shape'
-        if "batch_shape" in kwargs:
-            kwargs["batch_input_shape"] = kwargs.pop("batch_shape")
-        super().__init__(**kwargs)
-
 @app.on_event("startup")
 def load_model():
     """Load the deepfake detection model on application startup."""
@@ -61,7 +52,6 @@ def load_model():
         
         model = keras.models.load_model(MODEL_PATH, custom_objects={
             'Dense': CustomDense,
-            'InputLayer': CustomInputLayer,
         })
         print("Model loaded successfully!")
     except Exception as e:
