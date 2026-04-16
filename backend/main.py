@@ -54,6 +54,44 @@ def load_model():
         print(f"Error loading model: {e}")
         # Not raising an exception to still allow the app to start and show a friendly error later.
 
+@app.get("/api/debug")
+def debug_info():
+    """Debug endpoint to diagnose model loading issues on Render."""
+    model_exists = os.path.exists(MODEL_PATH)
+    model_size = os.path.getsize(MODEL_PATH) if model_exists else 0
+    
+    # Check if it's a LFS pointer file (they are < 200 bytes)
+    is_lfs_pointer = False
+    if model_exists and model_size < 1024:
+        try:
+            with open(MODEL_PATH, 'r', errors='ignore') as f:
+                content = f.read(200)
+                is_lfs_pointer = content.startswith("version https://git-lfs")
+        except:
+            pass
+    
+    # List the results directory
+    results_dir = os.path.join(BASE_DIR, "results_20260311_210339")
+    results_contents = []
+    if os.path.exists(results_dir):
+        for f in os.listdir(results_dir):
+            fp = os.path.join(results_dir, f)
+            size = os.path.getsize(fp) if os.path.isfile(fp) else "DIR"
+            results_contents.append({"name": f, "size": size})
+    
+    return {
+        "base_dir": BASE_DIR,
+        "model_path": MODEL_PATH,
+        "model_exists": model_exists,
+        "model_size_bytes": model_size,
+        "model_size_mb": round(model_size / (1024*1024), 2) if model_size else 0,
+        "is_lfs_pointer": is_lfs_pointer,
+        "model_loaded": model is not None,
+        "results_dir_exists": os.path.exists(results_dir),
+        "results_contents": results_contents,
+        "tensorflow_version": tf.__version__,
+    }
+
 def preprocess_image(image_bytes: bytes) -> np.ndarray:
     """Preprocess the image bytes to the format expected by the model."""
     try:
