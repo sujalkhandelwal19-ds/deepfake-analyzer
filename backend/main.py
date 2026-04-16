@@ -33,6 +33,7 @@ IMG_SIZE = (224, 224)
 
 # Global model variable
 model = None
+model_load_error = None
 
 class CustomDense(keras.layers.Dense):
     def __init__(self, **kwargs):
@@ -42,7 +43,8 @@ class CustomDense(keras.layers.Dense):
 @app.on_event("startup")
 def load_model():
     """Load the deepfake detection model on application startup."""
-    global model
+    global model, model_load_error
+    model_load_error = None
     print(f"Loading model from {MODEL_PATH}...")
     try:
         if not os.path.exists(MODEL_PATH):
@@ -51,8 +53,10 @@ def load_model():
         model = keras.models.load_model(MODEL_PATH, custom_objects={'Dense': CustomDense})
         print("Model loaded successfully!")
     except Exception as e:
+        import traceback
+        model_load_error = traceback.format_exc()
         print(f"Error loading model: {e}")
-        # Not raising an exception to still allow the app to start and show a friendly error later.
+        print(model_load_error)
 
 @app.get("/api/debug")
 def debug_info():
@@ -87,6 +91,7 @@ def debug_info():
         "model_size_mb": round(model_size / (1024*1024), 2) if model_size else 0,
         "is_lfs_pointer": is_lfs_pointer,
         "model_loaded": model is not None,
+        "model_load_error": model_load_error,
         "results_dir_exists": os.path.exists(results_dir),
         "results_contents": results_contents,
         "tensorflow_version": tf.__version__,
