@@ -40,6 +40,11 @@ class CustomDense(keras.layers.Dense):
         kwargs.pop("quantization_config", None)
         super().__init__(**kwargs)
 
+class CustomInputLayer(keras.layers.InputLayer):
+    def __init__(self, **kwargs):
+        kwargs.pop("optional", None)
+        super().__init__(**kwargs)
+
 @app.on_event("startup")
 def load_model():
     """Load the deepfake detection model on application startup."""
@@ -50,7 +55,10 @@ def load_model():
         if not os.path.exists(MODEL_PATH):
             raise FileNotFoundError(f"Model file not found at {MODEL_PATH}")
         
-        model = keras.models.load_model(MODEL_PATH, custom_objects={'Dense': CustomDense})
+        model = keras.models.load_model(MODEL_PATH, custom_objects={
+            'Dense': CustomDense,
+            'InputLayer': CustomInputLayer,
+        })
         print("Model loaded successfully!")
     except Exception as e:
         import traceback
